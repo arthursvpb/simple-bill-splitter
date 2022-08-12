@@ -1,0 +1,11 @@
+{
+  "name": "racha-role",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github-arthursvpb:arthursvpb/racha-role.git",
+  "author": "arthursvpb <arthurandroid15@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lit": "^2.3.0"
+  }
+}
