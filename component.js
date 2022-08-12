@@ -1,4 +1,6 @@
-class WordCount extends HTMLElement {
+import { LitElement } from "lit";
+
+class WordCount extends LitElement {
     constructor() {
         super(); // call for HTMLElement constructor
         const style = this.styles();
@@ -39,4 +41,4 @@ class WordCount extends HTMLElement {
 }
 
 // hiphen is required for component name
-window.customElements.define('word-count', WordCount);
+customElements.define('word-count', WordCount);
