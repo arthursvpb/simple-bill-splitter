@@ -1,8 +1,14 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 @customElement('lit-counter')
-class LitCounter extends LitElement {
+export class LitCounter extends LitElement {
+    static styles = css`
+        p {
+            color: blue;
+        }
+    `;
+
     @state() value = 1;
 
     handleClick() {
@@ -11,7 +17,7 @@ class LitCounter extends LitElement {
 
     render() {
         return html`
-            ${this.value}
+            <p>${this.value}</p>
             <button @click="${this.handleClick}">Add</button>
         `;
     }
