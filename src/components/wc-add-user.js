@@ -4,15 +4,17 @@ export class AddUser extends LitElement {
   static get styles() {
     return css`
       form {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1rem;
-        font-weight: 700;
         max-width: 1440px;
-        height: 120px;
         margin: auto;
-        background-color: var(--orange-500);
+      }
+
+      bx-form-item {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        max-width: 720px;
+        gap: 1rem;
+        margin: auto;
       }
 
       ul {
@@ -20,10 +22,6 @@ export class AddUser extends LitElement {
       }
       li {
         list-style-type: none;
-      }
-
-      .my-button {
-        @apply px-4 py-2 bg-blue-500 text-white rounded;
       }
     `;
   }
@@ -54,9 +52,14 @@ export class AddUser extends LitElement {
   render() {
     return html`
       <form @submit="${this.__handleAddUser}">
-        <input type="text" @input=${() => {}} />
-        <button class="my-button">Adicionar</button>
+        <bx-form-item>
+          <bx-input size="sm">
+            <span slot="label-text">New user</span>
+          </bx-input>
+          <bx-btn> Add </bx-btn>
+        </bx-form-item>
       </form>
+
       <ul>
         ${this.users.map(user => html`<li>${user.name}</li>`)}
       </ul>

@@ -12,13 +12,12 @@ export class Header extends LitElement {
         max-width: 1440px;
         height: 120px;
         margin: auto;
-        background-color: var(--green-500);
       }
     `;
   }
 
   render() {
-    return html`<header>Header</header>`;
+    return html`<header>💲 Bill Splitter</header>`;
   }
 }
 
