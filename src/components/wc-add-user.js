@@ -21,6 +21,10 @@ export class AddUser extends LitElement {
       li {
         list-style-type: none;
       }
+
+      .my-button {
+        @apply px-4 py-2 bg-blue-500 text-white rounded;
+      }
     `;
   }
 
@@ -51,7 +55,7 @@ export class AddUser extends LitElement {
     return html`
       <form @submit="${this.__handleAddUser}">
         <input type="text" @input=${() => {}} />
-        <button>Adicionar</button>
+        <button class="my-button">Adicionar</button>
       </form>
       <ul>
         ${this.users.map(user => html`<li>${user.name}</li>`)}

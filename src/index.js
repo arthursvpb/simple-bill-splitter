@@ -1,2 +1,2 @@
-import './components/Header';
-import './components/AddUser';
+import './components/wc-header';
+import './components/wc-add-user';
