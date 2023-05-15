@@ -1,2 +1,2 @@
-import './components/Header.js';
+import './components/Header';
 import './components/AddUser';
