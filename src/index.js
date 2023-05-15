@@ -1,9 +1,14 @@
-import './styles/global.scss';
+import '@shoelace-style/shoelace/dist/themes/dark.css';
 
-import '@carbon/web-components/es/components/button';
-import '@carbon/web-components/es/components/input';
-import '@carbon/web-components/es/components/form';
-import '@carbon/themes';
+import '@shoelace-style/shoelace/dist/components/button/button';
+import '@shoelace-style/shoelace/dist/components/icon/icon';
+import '@shoelace-style/shoelace/dist/components/input/input';
+import '@shoelace-style/shoelace/dist/components/rating/rating';
+import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
+
+import './styles/global.css';
 
 import './components/wc-header';
 import './components/wc-add-user';
+
+setBasePath('/shoelace');

@@ -6,15 +6,12 @@ export class AddUser extends LitElement {
       form {
         max-width: 1440px;
         margin: auto;
-      }
-
-      bx-form-item {
         display: flex;
         align-items: center;
+        justify-content: center;
         flex-direction: row;
-        max-width: 720px;
-        gap: 1rem;
         margin: auto;
+        gap: 1rem;
       }
 
       ul {
@@ -28,7 +25,7 @@ export class AddUser extends LitElement {
 
   static get properties() {
     return {
-      user: String,
+      user: Object,
       users: Array,
     };
   }
@@ -36,28 +33,40 @@ export class AddUser extends LitElement {
   constructor() {
     super();
 
-    this.user = '';
+    this.__initState();
+    this.__initHandlers();
+  }
+
+  __initState() {
+    this.user = { name: '' };
     this.users = [];
   }
 
-  __handleAddUser(event) {
-    event.preventDefault();
-
-    this.users.push({ name: this.user });
-
-    this.user = '';
-    event.target.reset();
+  __initHandlers() {
+    this.handlers = {
+      handleChange: e => {
+        this.user.name = e.target.value;
+      },
+      addUser: e => {
+        e.preventDefault();
+        this.users.push(this.user);
+        this.user = { name: '' };
+        e.target.reset();
+      },
+    };
   }
 
   render() {
     return html`
-      <form @submit="${this.__handleAddUser}">
-        <bx-form-item>
-          <bx-input size="sm">
-            <span slot="label-text">New user</span>
-          </bx-input>
-          <bx-btn> Add </bx-btn>
-        </bx-form-item>
+      <form @submit="${this.handlers.addUser}">
+        <sl-input
+          placeholder="Name"
+          .value=${this.user.name}
+          @input=${this.handlers.handleChange}
+        ></sl-input>
+        <sl-button type="submit" variant="success"
+          >Add <sl-icon slot="suffix" name="plus-lg"></sl-icon
+        ></sl-button>
       </form>
 
       <ul>
