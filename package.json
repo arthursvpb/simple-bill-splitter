@@ -2,7 +2,7 @@
   "name": "simple-bill-splitter",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github-arthursvpb:arthursvpb/racha-role.git",
+  "repository": "git@github-arthursvpb:arthursvpb/simple-bill-splitter.git",
   "author": "arthursvpb <arthurandroid15@gmail.com>",
   "license": "MIT",
   "scripts": {
