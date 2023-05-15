@@ -1,4 +1,4 @@
-# Racha Rolê
+# Simple Bill Splitter
 
-Racha Role is a web system that calculates bills between you and your friends.
-
+Simple Bill Splitter is a web system that calculates bills between you and your friends.
+Free, no login required and open source.
