@@ -14,11 +14,22 @@ export class AddUser extends LitElement {
         gap: 1rem;
       }
 
-      ul {
-        text-align: center;
+      .payers-container {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
       }
-      li {
-        list-style-type: none;
+
+      .card-basic {
+        margin-top: 20px;
+        width: 320px;
+      }
+
+      .card-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
     `;
   }
@@ -47,6 +58,10 @@ export class AddUser extends LitElement {
       handleChange: e => {
         this.user.name = e.target.value;
       },
+      removeUser: e => {
+        this.users.splice(e.currentTarget.dataset.index, 1);
+        this.users = [...this.users];
+      },
       addUser: e => {
         e.preventDefault();
         this.users.push(this.user);
@@ -60,7 +75,7 @@ export class AddUser extends LitElement {
     return html`
       <form @submit="${this.handlers.addUser}">
         <sl-input
-          placeholder="Name"
+          placeholder="Payer Name"
           .value=${this.user.name}
           @input=${this.handlers.handleChange}
         ></sl-input>
@@ -69,9 +84,21 @@ export class AddUser extends LitElement {
         ></sl-button>
       </form>
 
-      <ul>
-        ${this.users.map(user => html`<li>${user.name}</li>`)}
-      </ul>
+      <div class="payers-container">
+        ${this.users.map(
+          (user, index) => html` <sl-card class="card-basic" key=${index}>
+            <div class="card-content">
+              <p>${user.name}</p>
+              <sl-icon-button
+                name="trash"
+                label="Trash"
+                data-index=${index}
+                @click=${this.handlers.removeUser}
+              ></sl-icon-button>
+            </div>
+          </sl-card>`,
+        )}
+      </div>
     `;
   }
 }
