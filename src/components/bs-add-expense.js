@@ -1,5 +1,7 @@
 import { LitElement, html, css } from 'lit';
 
+import { maskCurrency, unmaskCurrency } from '../utils/currency';
+
 export class BSAddExpense extends LitElement {
   static get styles() {
     return css`
@@ -85,9 +87,10 @@ export class BSAddExpense extends LitElement {
         this.expense.name = e.target.value;
       },
       handleInput(e) {
-        const { value } = e.target;
+        const value = unmaskCurrency(e.target.value);
         const expense = this.expenses[e.target.dataset.index];
         expense.price = Number(value);
+        e.target.value = maskCurrency(value);
         this.expenses = [...this.expenses];
       },
       removeExpense: e => {
