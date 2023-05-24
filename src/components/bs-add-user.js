@@ -1,16 +1,12 @@
 import { LitElement, html, css } from 'lit';
 
-export class AddUser extends LitElement {
+export class BSAddUser extends LitElement {
   static get styles() {
     return css`
       form {
-        max-width: 1440px;
-        margin: auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-direction: row;
-        margin: auto;
         gap: 1rem;
       }
 
@@ -64,6 +60,8 @@ export class AddUser extends LitElement {
       },
       addUser: e => {
         e.preventDefault();
+        if (!this.user.name) return;
+
         this.users.push(this.user);
         this.user = { name: '' };
         e.target.reset();
@@ -75,11 +73,12 @@ export class AddUser extends LitElement {
     return html`
       <form @submit="${this.handlers.addUser}">
         <sl-input
+          required
           placeholder="Payer Name"
           .value=${this.user.name}
           @input=${this.handlers.handleChange}
         ></sl-input>
-        <sl-button type="submit" variant="success"
+        <sl-button type="submit" variant="primary"
           >Add <sl-icon slot="suffix" name="plus-lg"></sl-icon
         ></sl-button>
       </form>
@@ -103,4 +102,4 @@ export class AddUser extends LitElement {
   }
 }
 
-customElements.define('wc-add-user', AddUser);
+customElements.define('bs-add-user', BSAddUser);

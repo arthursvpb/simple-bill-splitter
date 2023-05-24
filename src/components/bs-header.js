@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
-export class Header extends LitElement {
+export class BSHeader extends LitElement {
   static get styles() {
     return css`
       header {
@@ -21,4 +21,4 @@ export class Header extends LitElement {
   }
 }
 
-customElements.define('wc-header', Header);
+customElements.define('bs-header', BSHeader);
