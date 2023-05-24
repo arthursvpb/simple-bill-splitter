@@ -20,7 +20,7 @@ export class BSAddExpense extends LitElement {
       .card-basic {
         position: relative;
         margin-top: 20px;
-        width: 320px;
+        width: 250px;
       }
 
       .card-content {
@@ -30,6 +30,10 @@ export class BSAddExpense extends LitElement {
         align-items: center;
       }
 
+      .card-input {
+        width: 180px;
+      }
+
       .trash-icon {
         margin: 10px;
         position: absolute;
@@ -37,8 +41,21 @@ export class BSAddExpense extends LitElement {
         right: 0;
       }
 
+      .currency-dolar {
+        color: var(--sl-color-success-950);
+      }
+
+      .save-expense {
+        transition: 0.1s;
+        cursor: pointer;
+      }
+
+      .save-expense:hover {
+        color: var(--sl-color-success-700);
+      }
+
       .hide {
-        display: none;
+        visibility: hidden;
       }
     `;
   }
@@ -71,7 +88,6 @@ export class BSAddExpense extends LitElement {
         const { value } = e.target;
         const expense = this.expenses[e.target.dataset.index];
         expense.price = Number(value);
-
         this.expenses = [...this.expenses];
       },
       removeExpense: e => {
@@ -80,6 +96,8 @@ export class BSAddExpense extends LitElement {
       },
       addExpense: e => {
         e.preventDefault();
+        if (!this.expense.name) return;
+
         this.expenses.push(this.expense);
         this.expense = { name: '', price: 0 };
         e.target.reset();
@@ -99,7 +117,7 @@ export class BSAddExpense extends LitElement {
           @input=${this.handlers.handleChange}
         ></sl-input>
         <sl-button type="submit" variant="success"
-          >Add <sl-icon slot="suffix" name="plus-lg"></sl-icon
+          ><sl-icon slot="suffix" name="plus-lg"></sl-icon
         ></sl-button>
       </form>
 
@@ -110,16 +128,21 @@ export class BSAddExpense extends LitElement {
               <div>
                 <p>${expense.name}</p>
                 <sl-input
+                  pill
                   class="card-input"
                   data-index=${index}
                   @input="${this.handlers.handleInput}"
                 >
-                  <sl-icon name="currency-dollar" slot="prefix"></sl-icon>
-                  <sl-format-number
+                  <sl-icon
+                    class="currency-dolar"
+                    name="currency-dollar"
                     slot="prefix"
-                    class="${!expense.price && 'hide'}"
-                    value="${expense.price}"
-                  ></sl-format-number>
+                  ></sl-icon>
+                  <sl-icon
+                    class="save-expense ${!expense.price && 'hide'}"
+                    name="check-circle"
+                    slot="suffix"
+                  ></sl-icon>
                 </sl-input>
               </div>
             </div>

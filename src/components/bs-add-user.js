@@ -18,8 +18,9 @@ export class BSAddUser extends LitElement {
       }
 
       .card-basic {
+        position: relative;
         margin-top: 20px;
-        width: 320px;
+        width: 265px;
       }
 
       .card-content {
@@ -31,6 +32,13 @@ export class BSAddUser extends LitElement {
       .avatar-group {
         display: flex;
         gap: 20px;
+      }
+
+      .trash-icon {
+        margin: 10px;
+        position: absolute;
+        top: 0;
+        right: 0;
       }
     `;
   }
@@ -79,12 +87,13 @@ export class BSAddUser extends LitElement {
       <form @submit="${this.handlers.addUser}">
         <sl-input
           required
-          placeholder="Payer Name"
+          maxlength="15"
+          placeholder="Name"
           .value=${this.user.name}
           @input=${this.handlers.handleChange}
         ></sl-input>
         <sl-button type="submit" variant="primary"
-          >Add <sl-icon slot="suffix" name="plus-lg"></sl-icon
+          ><sl-icon slot="suffix" name="plus-lg"></sl-icon
         ></sl-button>
       </form>
 
@@ -98,14 +107,14 @@ export class BSAddUser extends LitElement {
                 ></sl-avatar>
                 <p>${user.name}</p>
               </div>
-
-              <sl-icon-button
-                name="trash"
-                label="Trash"
-                data-index=${index}
-                @click=${this.handlers.removeUser}
-              ></sl-icon-button>
             </div>
+            <sl-icon-button
+              class="trash-icon"
+              name="trash"
+              label="Trash"
+              data-index=${index}
+              @click=${this.handlers.removeUser}
+            ></sl-icon-button>
           </sl-card>`,
         )}
       </div>
