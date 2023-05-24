@@ -7,6 +7,7 @@ import '@shoelace-style/shoelace/dist/components/input/input';
 import '@shoelace-style/shoelace/dist/components/rating/rating';
 import '@shoelace-style/shoelace/dist/components/card/card';
 import '@shoelace-style/shoelace/dist/components/format-number/format-number';
+import '@shoelace-style/shoelace/dist/components/avatar/avatar';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
 
 import './styles/global.css';

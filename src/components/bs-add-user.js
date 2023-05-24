@@ -27,6 +27,11 @@ export class BSAddUser extends LitElement {
         justify-content: space-between;
         align-items: center;
       }
+
+      .avatar-group {
+        display: flex;
+        gap: 20px;
+      }
     `;
   }
 
@@ -87,7 +92,13 @@ export class BSAddUser extends LitElement {
         ${this.users.map(
           (user, index) => html` <sl-card class="card-basic" key=${index}>
             <div class="card-content">
-              <p>${user.name}</p>
+              <div class="avatar-group">
+                <sl-avatar
+                  initials=${user.name.substring(0, 2).toUpperCase()}
+                ></sl-avatar>
+                <p>${user.name}</p>
+              </div>
+
               <sl-icon-button
                 name="trash"
                 label="Trash"
