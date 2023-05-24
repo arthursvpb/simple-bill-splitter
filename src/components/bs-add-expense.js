@@ -18,20 +18,23 @@ export class BSAddExpense extends LitElement {
       }
 
       .card-basic {
+        position: relative;
         margin-top: 20px;
         width: 320px;
       }
 
       .card-content {
         display: flex;
-        justify-content: space-between;
+        text-align: center;
+        justify-content: center;
         align-items: center;
       }
 
-      .card-input {
-        margin: 0;
-        max-width: 200px;
-        cursor: text;
+      .trash-icon {
+        margin: 10px;
+        position: absolute;
+        top: 0;
+        right: 0;
       }
 
       .hide {
@@ -108,7 +111,6 @@ export class BSAddExpense extends LitElement {
                 <p>${expense.name}</p>
                 <sl-input
                   class="card-input"
-                  type="number"
                   data-index=${index}
                   @input="${this.handlers.handleInput}"
                 >
@@ -120,13 +122,14 @@ export class BSAddExpense extends LitElement {
                   ></sl-format-number>
                 </sl-input>
               </div>
-              <sl-icon-button
-                name="trash"
-                label="Trash"
-                data-index=${index}
-                @click=${this.handlers.removeExpense}
-              ></sl-icon-button>
             </div>
+            <sl-icon-button
+              class="trash-icon"
+              name="trash"
+              label="Trash"
+              data-index=${index}
+              @click=${this.handlers.removeExpense}
+            ></sl-icon-button>
           </sl-card>`,
         )}
       </div>
