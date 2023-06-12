@@ -109,8 +109,6 @@ export class BSAddExpense extends LitElement {
   }
 
   render() {
-    console.log('this.expenses', this.expenses);
-
     return html`
       <form @submit="${this.handlers.addExpense}">
         <sl-input

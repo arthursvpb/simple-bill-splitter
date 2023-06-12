@@ -1,3 +1,12 @@
-// import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { createStore } from 'zustand/vanilla';
 
-// const useStore = create(set => ({}));
+export const userStore = createStore(
+  persist(
+    set => ({
+      users: [],
+      persistUser: users => set(() => ({ users })),
+    }),
+    { name: '@bs-users' },
+  ),
+);

@@ -1,5 +1,7 @@
 import { LitElement, html, css } from 'lit';
 
+import { userStore } from '../store';
+
 export class BSAddUser extends LitElement {
   static get styles() {
     return css`
@@ -45,6 +47,7 @@ export class BSAddUser extends LitElement {
 
   static get properties() {
     return {
+      store: Object,
       user: Object,
       users: Array,
     };
@@ -58,6 +61,8 @@ export class BSAddUser extends LitElement {
   }
 
   __initState() {
+    this.store = userStore;
+
     this.user = { name: '' };
     this.users = [];
   }
@@ -80,6 +85,27 @@ export class BSAddUser extends LitElement {
         e.target.reset();
       },
     };
+  }
+
+  __localStorageUpdate() {
+    this.store.getState().persistUser(this.users);
+  }
+
+  firstUpdated() {
+    super.firstUpdated();
+
+    const {
+      state: { users },
+    } = JSON.parse(localStorage.getItem('@bs-users'));
+
+    if (users.length) this.users = [...users];
+  }
+
+  updated(changedProps) {
+    if (changedProps.has('users') || changedProps.has('user'))
+      this.__localStorageUpdate();
+
+    super.updated(changedProps);
   }
 
   render() {
