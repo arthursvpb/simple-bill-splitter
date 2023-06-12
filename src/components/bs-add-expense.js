@@ -59,6 +59,10 @@ export class BSAddExpense extends LitElement {
       .hide {
         visibility: hidden;
       }
+
+      .select-payers {
+        margin-top: 20px;
+      }
     `;
   }
 
@@ -154,6 +158,19 @@ export class BSAddExpense extends LitElement {
               data-index=${index}
               @click=${this.handlers.removeExpense}
             ></sl-icon-button>
+
+            <sl-select
+              class="select-payers"
+              placeholder="Select Payers"
+              value="Everyone"
+              multiple
+              clearable
+            >
+              <sl-option value="everyone">Everyone</sl-option>
+              <sl-option value="user-1">User 1</sl-option>
+              <sl-option value="user-2">User 2</sl-option>
+              <sl-option value="user-3">User 3</sl-option>
+            </sl-select>
           </sl-card>`,
         )}
       </div>
