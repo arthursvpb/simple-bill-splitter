@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
+import { userStore } from '../store';
 import { maskCurrency, unmaskCurrency } from '../utils/currency';
 
 export class BSAddExpense extends LitElement {
@@ -44,7 +45,7 @@ export class BSAddExpense extends LitElement {
       }
 
       .currency-dolar {
-        color: var(--sl-color-success-950);
+        color: var(--sl-color-success-900);
       }
 
       .save-expense {
@@ -60,14 +61,26 @@ export class BSAddExpense extends LitElement {
         visibility: hidden;
       }
 
+      .display-none {
+        display: none;
+      }
+
       .select-payers {
         margin-top: 20px;
+      }
+
+      .checkbox-everyone {
+        margin-top: 16px;
+        margin-left: 22px;
+        display: flex;
+        align-items: center;
       }
     `;
   }
 
   static get properties() {
     return {
+      store: Object,
       expense: Object,
       expenses: Array,
     };
@@ -81,6 +94,9 @@ export class BSAddExpense extends LitElement {
   }
 
   __initState() {
+    this.users = [];
+    this.selectedUsers = [];
+
     this.expense = { name: '', price: 0 };
     this.expenses = [];
   }
@@ -109,7 +125,49 @@ export class BSAddExpense extends LitElement {
         this.expense = { name: '', price: 0 };
         e.target.reset();
       },
+      changeSelectedUsers: e => {
+        if (e.target.value === 'select-all')
+          e.target.value = this.users.map((_, i) => `user-${i}`);
+      },
     };
+  }
+
+  __localStorageUpdate() {
+    this.store.getState().persistExpense(this.expenses);
+  }
+
+  firstUpdated() {
+    super.firstUpdated();
+
+    const {
+      state: { expenses },
+    } = JSON.parse(localStorage.getItem('@bs-expenses'));
+
+    if (expenses.length) this.users = [...expenses];
+  }
+
+  updated(changedProps) {
+    if (changedProps.has('expense') || changedProps.has('expenses'))
+      this.__localStorageUpdate();
+
+    super.updated(changedProps);
+  }
+
+  __handleStateChange(users) {
+    this.users = [...users];
+    this.requestUpdate();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.unsubscribe = userStore.subscribe(({ users }) =>
+      this.__handleStateChange(users),
+    );
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.unsubscribe();
   }
 
   render() {
@@ -161,15 +219,24 @@ export class BSAddExpense extends LitElement {
 
             <sl-select
               class="select-payers"
-              placeholder="Select Payers"
-              value="Everyone"
+              placeholder="Payers"
               multiple
               clearable
+              filled
+              max-options-visible="5"
+              value="everyone"
+              @sl-change=${this.handlers.changeSelectedUsers}
             >
-              <sl-option value="everyone">Everyone</sl-option>
-              <sl-option value="user-1">User 1</sl-option>
-              <sl-option value="user-2">User 2</sl-option>
-              <sl-option value="user-3">User 3</sl-option>
+              <sl-checkbox class="checkbox-everyone">Everyone</sl-checkbox>
+              <sl-option class="display-none" value="everyone"
+                >Everyone</sl-option
+              >
+              <sl-divider></sl-divider>
+              ${this.users.map(
+                (user, index) => html` <sl-option value="user-${index}"
+                  >${user.name}</sl-option
+                >`,
+              )}
             </sl-select>
           </sl-card>`,
         )}

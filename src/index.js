@@ -10,6 +10,8 @@ import '@shoelace-style/shoelace/dist/components/format-number/format-number';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
 import '@shoelace-style/shoelace/dist/components/select/select';
 import '@shoelace-style/shoelace/dist/components/option/option';
+import '@shoelace-style/shoelace/dist/components/divider/divider';
+import '@shoelace-style/shoelace/dist/components/checkbox/checkbox';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
 
 import './styles/global.css';
