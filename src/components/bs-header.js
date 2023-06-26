@@ -1,5 +1,7 @@
 import { LitElement, html, css } from 'lit';
 
+import { maskCurrency } from '../utils/currency';
+
 export class BSHeader extends LitElement {
   static get styles() {
     return css`
@@ -12,12 +14,20 @@ export class BSHeader extends LitElement {
         max-width: 1440px;
         height: 120px;
         margin: auto;
+        gap: 20px;
+      }
+
+      .total {
+        color: var(--sl-color-green-700);
       }
     `;
   }
 
   render() {
-    return html`<header>💲 Bill Splitter</header>`;
+    return html`<header>
+      <sl-icon name="cash-coin"></sl-icon>
+      <p>Total: <span class="total">$ ${maskCurrency('0')}</span></p>
+    </header>`;
   }
 }
 

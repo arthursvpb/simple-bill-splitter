@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { v4 as uuid } from 'uuid';
 
 import { userStore } from '../store';
+import { maskCurrency } from '../utils/currency';
 
 export class BSAddUser extends LitElement {
   static get styles() {
@@ -64,7 +65,7 @@ export class BSAddUser extends LitElement {
   __initState() {
     this.store = userStore;
 
-    this.user = { name: '', id: uuid() };
+    this.user = { name: '', id: uuid(), bill: 0 };
     this.users = [];
   }
 
@@ -82,7 +83,7 @@ export class BSAddUser extends LitElement {
         if (!this.user.name) return;
 
         this.users.push(this.user);
-        this.user = { name: '', id: uuid() };
+        this.user = { name: '', id: uuid(), bill: 0 };
         e.target.reset();
       },
     };
@@ -135,6 +136,7 @@ export class BSAddUser extends LitElement {
                 <p>${user.name}</p>
               </div>
             </div>
+            <p>Needs to pay: $ ${maskCurrency(String(user.bill))}</p>
             <sl-icon-button
               class="trash-icon"
               name="trash"
