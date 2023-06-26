@@ -16,6 +16,8 @@ export const expenseStore = createStore(
     set => ({
       expenses: [],
       persistExpense: expenses => set(() => ({ expenses })),
+      getTotal: expenses =>
+        expenses.reduce((acc, expense) => acc + expense.price, 0),
     }),
     { name: '@bs-expenses' },
   ),

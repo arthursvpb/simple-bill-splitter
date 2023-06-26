@@ -195,6 +195,7 @@ export class BSAddExpense extends LitElement {
                   class="card-input"
                   data-index=${index}
                   @input="${this.handlers.handleInput}"
+                  value=${maskCurrency(String(expense.price))}
                 >
                   <sl-icon name="currency-dollar" slot="prefix"></sl-icon>
                 </sl-input>

@@ -6,6 +6,7 @@ import { maskCurrency } from '../utils/currency';
 export class BSHeader extends LitElement {
   static get properties() {
     return {
+      store: Object,
       expenses: Object,
     };
   }
@@ -17,6 +18,8 @@ export class BSHeader extends LitElement {
   }
 
   __initState() {
+    this.store = expenseStore;
+
     this.expenses = [];
     this.total = 0;
   }
@@ -41,12 +44,11 @@ export class BSHeader extends LitElement {
     `;
   }
 
-  updated(changedProps) {
-    console.log('changedProps', changedProps);
-    if (changedProps.has('expense') || changedProps.has('expenses'))
-      this.__getTotal();
+  update(changedProps) {
+    if (changedProps.has('expenses'))
+      this.total = this.store.getState().getTotal(this.expenses);
 
-    super.updated(changedProps);
+    super.update(changedProps);
   }
 
   __handleStateChange(expenses) {
@@ -64,10 +66,6 @@ export class BSHeader extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.unsubscribe();
-  }
-
-  __getTotal() {
-    this.total = this.expenses.reduce((acc, expense) => acc + expense.price, 0);
   }
 
   render() {
