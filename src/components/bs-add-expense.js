@@ -44,15 +44,6 @@ export class BSAddExpense extends LitElement {
         right: 0;
       }
 
-      .save-expense {
-        transition: 0.1s;
-        cursor: pointer;
-      }
-
-      .save-expense:hover {
-        color: var(--sl-color-success-700);
-      }
-
       .hide {
         visibility: hidden;
       }
@@ -206,11 +197,6 @@ export class BSAddExpense extends LitElement {
                   @input="${this.handlers.handleInput}"
                 >
                   <sl-icon name="currency-dollar" slot="prefix"></sl-icon>
-                  <sl-icon
-                    class="save-expense ${!expense.price && 'hide'}"
-                    name="check-circle"
-                    slot="suffix"
-                  ></sl-icon>
                 </sl-input>
               </div>
             </div>
