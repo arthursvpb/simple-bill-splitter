@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { v4 as uuid } from 'uuid';
 
 import { userStore } from '../store';
 
@@ -63,7 +64,7 @@ export class BSAddUser extends LitElement {
   __initState() {
     this.store = userStore;
 
-    this.user = { name: '' };
+    this.user = { name: '', id: uuid() };
     this.users = [];
   }
 
@@ -81,7 +82,7 @@ export class BSAddUser extends LitElement {
         if (!this.user.name) return;
 
         this.users.push(this.user);
-        this.user = { name: '' };
+        this.user = { name: '', id: uuid() };
         e.target.reset();
       },
     };

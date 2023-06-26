@@ -127,9 +127,8 @@ export class BSAddExpense extends LitElement {
         this.expense = { name: '', price: 0 };
         e.target.reset();
       },
-      changeSelectedUsers: e => {
-        if (e.target.value === 'select-all')
-          e.target.value = this.users.map((_, i) => `user-${i}`);
+      changeChecked: e => {
+        console.log('e', e);
       },
     };
   }
@@ -170,6 +169,18 @@ export class BSAddExpense extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.unsubscribe();
+  }
+
+  __getDefaultUsersSelected() {
+    return this.users.map((_, index) => `user-${index}`);
+  }
+
+  __renderUsersOptions() {
+    return html`${this.users.map(
+      (user, index) => html` <sl-option value="user-${index}"
+        >${user.name}</sl-option
+      >`,
+    )}`;
   }
 
   render() {
@@ -225,20 +236,11 @@ export class BSAddExpense extends LitElement {
               multiple
               clearable
               filled
-              max-options-visible="5"
-              value="everyone"
-              @sl-change=${this.handlers.changeSelectedUsers}
+              size="small"
+              max-options-visible="1"
+              .value=${this.__getDefaultUsersSelected()}
             >
-              <sl-checkbox class="checkbox-everyone">Everyone</sl-checkbox>
-              <sl-option class="display-none" value="everyone"
-                >Everyone</sl-option
-              >
-              <sl-divider></sl-divider>
-              ${this.users.map(
-                (user, index) => html` <sl-option value="user-${index}"
-                  >${user.name}</sl-option
-                >`,
-              )}
+              ${this.__renderUsersOptions()}
             </sl-select>
           </sl-card>`,
         )}
