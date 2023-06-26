@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
-import { userStore } from '../store';
+import { userStore, expenseStore } from '../store';
 import { maskCurrency, unmaskCurrency } from '../utils/currency';
 
 export class BSAddExpense extends LitElement {
@@ -94,6 +94,8 @@ export class BSAddExpense extends LitElement {
   }
 
   __initState() {
+    this.store = expenseStore;
+
     this.users = [];
     this.selectedUsers = [];
 
@@ -143,7 +145,7 @@ export class BSAddExpense extends LitElement {
       state: { expenses },
     } = JSON.parse(localStorage.getItem('@bs-expenses'));
 
-    if (expenses.length) this.users = [...expenses];
+    if (expenses.length) this.expenses = [...expenses];
   }
 
   updated(changedProps) {

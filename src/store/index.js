@@ -9,6 +9,9 @@ export const userStore = createStore(
     }),
     { name: '@bs-users' },
   ),
+);
+
+export const expenseStore = createStore(
   persist(
     set => ({
       expenses: [],
