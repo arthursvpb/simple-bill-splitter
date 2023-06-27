@@ -1,12 +1,18 @@
 # 💲 Simple Bill Splitter
 
+<p align="center">
+  <a href="#-running">Running</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 
+  <a href="#-technologies">Tecnologies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-license">License</a>
+</p>
+
 <p align="center">Simple Bill Splitter is a web system that calculates bills between you and your friends.</p>
 
 <p align="center">
   <img alt="Simple Bill Splitter" src=".github/preview.svg" width="100%">
 </p>
 
-## ▶️ Running locally
+## ▶️ Running
 
 <strong>Requirements</strong>:
 
@@ -33,3 +39,7 @@ yarn && yarn dev
 - [Lit Element](https://lit.dev/)
 - [Shoelace](https://shoelace.style/)
 - [Zustand](https://github.com/pmndrs/zustand)
+
+## 📝 License
+
+This project is under the MIT license. See the [LICENSE](LICENSE.md) file for more details.
