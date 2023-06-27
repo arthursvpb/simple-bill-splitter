@@ -56,6 +56,10 @@ export class BSAddExpense extends LitElement {
         margin-top: 20px;
       }
 
+      sl-select::part(tag__remove-button) {
+        display: none;
+      }
+
       .checkbox-everyone {
         margin-top: 16px;
         margin-left: 22px;
@@ -86,7 +90,12 @@ export class BSAddExpense extends LitElement {
     this.users = [];
     this.selectedUsers = [];
 
-    this.expense = { name: '', price: 0 };
+    this.expense = {
+      name: '',
+      price: 0,
+      payers: [],
+    };
+
     this.expenses = [];
   }
 
@@ -110,12 +119,31 @@ export class BSAddExpense extends LitElement {
         e.preventDefault();
         if (!this.expense.name) return;
 
+        this.expense.payers = this.__getDefaultUsersSelected();
         this.expenses.push(this.expense);
-        this.expense = { name: '', price: 0 };
+
+        this.expense = {
+          name: '',
+          price: 0,
+          payers: [],
+        };
+
         e.target.reset();
       },
-      changeChecked: e => {
-        console.log('e', e);
+      handlePayerChange: (e, index) => {
+        if (e.type === 'click' || e.key === 'Enter') {
+          const user = e.target.value;
+          const { payers } = this.expenses[index];
+
+          const userIndex = payers.findIndex(payer => payer === user);
+          const foundIndex = userIndex !== -1;
+
+          foundIndex
+            ? payers.splice(userIndex, 1)
+            : payers.splice(userIndex, 0, user);
+
+          this.expenses = [...this.expenses];
+        }
       },
     };
   }
@@ -162,11 +190,14 @@ export class BSAddExpense extends LitElement {
     return this.users.map((_, index) => `user-${index}`);
   }
 
-  __renderUsersOptions() {
+  __renderUsersOptions(optionIndex) {
     return html`${this.users.map(
-      (user, index) => html` <sl-option value="user-${index}"
-        >${user.name}</sl-option
-      >`,
+      (user, index) => html` <sl-option
+        value="user-${index}"
+        @click=${e => this.handlers.handlePayerChange(e, optionIndex)}
+        @keydown=${e => this.handlers.handlePayerChange(e, optionIndex)}
+        >${user.name}
+      </sl-option>`,
     )}`;
   }
 
@@ -213,13 +244,11 @@ export class BSAddExpense extends LitElement {
               class="select-payers"
               placeholder="Payers"
               multiple
-              clearable
               filled
-              size="small"
               max-options-visible="1"
-              .value=${this.__getDefaultUsersSelected()}
+              .value=${this.expenses[index].payers}
             >
-              ${this.__renderUsersOptions()}
+              ${this.__renderUsersOptions(index)}
             </sl-select>
           </sl-card>`,
         )}
