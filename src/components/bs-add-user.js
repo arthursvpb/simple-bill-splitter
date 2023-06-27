@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { v4 as uuid } from 'uuid';
 
-import { userStore } from '../store';
+import { expenseStore, userStore } from '../store';
 import { maskCurrency } from '../utils/currency';
 
 export class BSAddUser extends LitElement {
@@ -52,6 +52,7 @@ export class BSAddUser extends LitElement {
       store: Object,
       user: Object,
       users: Array,
+      expenses: Object,
     };
   }
 
@@ -64,6 +65,8 @@ export class BSAddUser extends LitElement {
 
   __initState() {
     this.store = userStore;
+
+    this.expenses = [];
 
     this.user = { name: '', id: uuid(), bill: 0 };
     this.users = [];
@@ -89,6 +92,23 @@ export class BSAddUser extends LitElement {
     };
   }
 
+  __handleStateChange(expenses) {
+    this.expenses = [...expenses];
+    this.requestUpdate();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.unsubscribe = expenseStore.subscribe(({ expenses }) =>
+      this.__handleStateChange(expenses),
+    );
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.unsubscribe();
+  }
+
   __localStorageUpdate() {
     this.store.getState().persistUser(this.users);
   }
@@ -107,7 +127,31 @@ export class BSAddUser extends LitElement {
     if (changedProps.has('users') || changedProps.has('user'))
       this.__localStorageUpdate();
 
+    if (changedProps.has('expenses')) {
+      console.log('changedProps', changedProps);
+
+      this.users = this.users.map((user, index) => ({
+        ...user,
+        bill: this.__getNeedsToPay(index),
+      }));
+    }
+
     super.updated(changedProps);
+  }
+
+  __getNeedsToPay(index) {
+    const expense = this.expenses[index];
+
+    if (
+      expense &&
+      expense.payers &&
+      expense.payers.length &&
+      expense.payers.includes(`user-${index}`)
+    ) {
+      return expense.price / expense.payers.length;
+    }
+
+    return 0;
   }
 
   render() {
@@ -116,7 +160,7 @@ export class BSAddUser extends LitElement {
         <sl-input
           required
           maxlength="15"
-          placeholder="Name"
+          placeholder="Payer"
           .value=${this.user.name}
           @input=${this.handlers.handleChange}
         ></sl-input>
@@ -136,7 +180,7 @@ export class BSAddUser extends LitElement {
                 <p>${user.name}</p>
               </div>
             </div>
-            <p>Needs to pay: $ ${maskCurrency(String(user.bill))}</p>
+            <p>Needs to pay: $${user.bill}</p>
             <sl-icon-button
               class="trash-icon"
               name="trash"
