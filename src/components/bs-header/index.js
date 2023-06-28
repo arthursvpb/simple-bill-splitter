@@ -1,9 +1,15 @@
 import { LitElement, html, css } from 'lit';
 
-import { expenseStore } from '../store';
-import { maskCurrency } from '../utils/currency';
+import { expenseStore } from '../../store';
+import { maskCurrency } from '../../utils/currency';
+
+import { styles } from './styles';
 
 export class BSHeader extends LitElement {
+  static get styles() {
+    return styles;
+  }
+
   static get properties() {
     return {
       store: Object,
@@ -22,26 +28,6 @@ export class BSHeader extends LitElement {
 
     this.expenses = [];
     this.total = 0;
-  }
-
-  static get styles() {
-    return css`
-      header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 2rem;
-        font-weight: 700;
-        max-width: 1440px;
-        height: 120px;
-        margin: auto;
-        gap: 20px;
-      }
-
-      .total {
-        color: var(--sl-color-green-700);
-      }
-    `;
   }
 
   update(changedProps) {
