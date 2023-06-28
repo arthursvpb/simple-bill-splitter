@@ -43,6 +43,11 @@ export class BSAddUser extends LitElement {
         top: 0;
         right: 0;
       }
+
+      .needs-to-pay {
+        color: var(--sl-color-green-700);
+        font-weight: bold;
+      }
     `;
   }
 
@@ -167,7 +172,12 @@ export class BSAddUser extends LitElement {
                 <p>${user.name}</p>
               </div>
             </div>
-            <p>Needs to pay: $ ${Number(user.bill).toFixed(2)}</p>
+            <p>
+              Needs to pay:
+              <span class=${user.bill && 'needs-to-pay'}
+                >$ ${Number(user.bill).toFixed(2)}</span
+              >
+            </p>
             <sl-icon-button
               class="trash-icon"
               name="trash"
