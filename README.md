@@ -16,9 +16,11 @@
 
 <br />
 
-<p align="center">
+<p align="center" style="border: 5px solid hsl(240 4.6% 22%);">
   <img alt="Simple Bill Splitter" src=".github/preview.png" width="100%">
 </p>
+
+<br />
 
 ## 💻 Running
 
