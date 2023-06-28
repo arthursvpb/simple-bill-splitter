@@ -17,7 +17,7 @@
 <br />
 
 <p align="center">
-  <img alt="Simple Bill Splitter" src=".github/preview.svg" width="100%">
+  <img alt="Simple Bill Splitter" src=".github/preview.png" width="100%">
 </p>
 
 ## 💻 Running
