@@ -109,10 +109,14 @@ export class BSAddExpense extends LitElement {
         const expense = this.expenses[e.target.dataset.index];
         expense.price = Number(value);
         e.target.value = maskCurrency(value);
+
+        this.store.getState().calculateBills(this.users, this.expenses);
         this.expenses = [...this.expenses];
       },
       removeExpense: e => {
         this.expenses.splice(e.currentTarget.dataset.index, 1);
+
+        this.store.getState().calculateBills(this.users, this.expenses);
         this.expenses = [...this.expenses];
       },
       addExpense: e => {
@@ -142,6 +146,7 @@ export class BSAddExpense extends LitElement {
             ? payers.splice(userIndex, 1)
             : payers.splice(userIndex, 0, user);
 
+          this.store.getState().calculateBills(this.users, this.expenses);
           this.expenses = [...this.expenses];
         }
       },

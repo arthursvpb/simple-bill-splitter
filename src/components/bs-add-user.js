@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit';
-import { v4 as uuid } from 'uuid';
 
 import { expenseStore, userStore } from '../store';
 import { maskCurrency } from '../utils/currency';
@@ -67,9 +66,9 @@ export class BSAddUser extends LitElement {
     this.store = userStore;
 
     this.expenses = [];
-
-    this.user = { name: '', id: uuid(), bill: 0 };
     this.users = [];
+
+    this.user = { name: '', id: '', bill: 0 };
   }
 
   __initHandlers() {
@@ -79,17 +78,28 @@ export class BSAddUser extends LitElement {
       },
       removeUser: e => {
         this.users.splice(e.currentTarget.dataset.index, 1);
-        this.users = [...this.users];
+        this.__updateUserIndexes();
+        expenseStore.getState().calculateBills(this.users, this.expenses);
       },
       addUser: e => {
         e.preventDefault();
         if (!this.user.name) return;
 
         this.users.push(this.user);
-        this.user = { name: '', id: uuid(), bill: 0 };
+        this.__updateUserIndexes();
+        expenseStore.getState().calculateBills(this.users, this.expenses);
+
+        this.user = { name: '', id: `user-${this.users.length}`, bill: 0 };
         e.target.reset();
       },
     };
+  }
+
+  __updateUserIndexes() {
+    this.users = this.users.map((user, index) => ({
+      ...user,
+      id: `user-${index}`,
+    }));
   }
 
   __handleStateChange(expenses) {
@@ -124,34 +134,11 @@ export class BSAddUser extends LitElement {
   }
 
   updated(changedProps) {
-    if (changedProps.has('users') || changedProps.has('user'))
+    if (changedProps.has('users') || changedProps.has('expenses')) {
       this.__localStorageUpdate();
-
-    if (changedProps.has('expenses')) {
-      console.log('changedProps', changedProps);
-
-      this.users = this.users.map((user, index) => ({
-        ...user,
-        bill: this.__getNeedsToPay(index),
-      }));
     }
 
     super.updated(changedProps);
-  }
-
-  __getNeedsToPay(index) {
-    const expense = this.expenses[index];
-
-    if (
-      expense &&
-      expense.payers &&
-      expense.payers.length &&
-      expense.payers.includes(`user-${index}`)
-    ) {
-      return expense.price / expense.payers.length;
-    }
-
-    return 0;
   }
 
   render() {
@@ -180,7 +167,7 @@ export class BSAddUser extends LitElement {
                 <p>${user.name}</p>
               </div>
             </div>
-            <p>Needs to pay: $${user.bill}</p>
+            <p>Needs to pay: $ ${Number(user.bill).toFixed(2)}</p>
             <sl-icon-button
               class="trash-icon"
               name="trash"

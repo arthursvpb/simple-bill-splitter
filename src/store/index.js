@@ -18,6 +18,21 @@ export const expenseStore = createStore(
       persistExpense: expenses => set(() => ({ expenses })),
       getTotal: expenses =>
         expenses.reduce((acc, expense) => acc + expense.price, 0),
+      calculateBills: (users, expenses) => {
+        users.forEach(user => {
+          user.bill = 0;
+        });
+
+        expenses.forEach(expense => {
+          const numPayers = expense.payers.length;
+          const splitAmount = expense.price / numPayers;
+
+          expense.payers.forEach(payerId => {
+            const payer = users.find(user => user.id === payerId);
+            if (payer) payer.bill += splitAmount;
+          });
+        });
+      },
     }),
     { name: '@bs-expenses' },
   ),
