@@ -25,6 +25,18 @@ export class BSExpenses extends LitElement {
     this.__initHandlers();
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.unsubscribe = userStore.subscribe(({ users }) =>
+      this.__handleStateChange(users),
+    );
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.unsubscribe();
+  }
+
   __initState() {
     this.store = expenseStore;
 
@@ -45,17 +57,17 @@ export class BSExpenses extends LitElement {
       handleChange: e => {
         this.expense.name = e.target.value;
       },
-      handleInput(e) {
+      handleInput(e, index) {
         const value = unmaskCurrency(e.target.value);
-        const expense = this.expenses[e.target.dataset.index];
+        const expense = this.expenses[index];
         expense.price = Number(value);
         e.target.value = maskCurrency(value);
 
         this.store.getState().calculateBills(this.users, this.expenses);
         this.expenses = [...this.expenses];
       },
-      removeExpense: e => {
-        this.expenses.splice(e.currentTarget.dataset.index, 1);
+      removeExpense: index => {
+        this.expenses.splice(index, 1);
 
         this.store.getState().calculateBills(this.users, this.expenses);
         this.expenses = [...this.expenses];
@@ -120,86 +132,82 @@ export class BSExpenses extends LitElement {
     this.requestUpdate();
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.unsubscribe = userStore.subscribe(({ users }) =>
-      this.__handleStateChange(users),
-    );
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.unsubscribe();
-  }
-
   __getDefaultUsersSelected() {
     return this.users.map((_, index) => `user-${index}`);
   }
 
-  __renderUsersOptions(optionIndex) {
+  __usersSelect(expenseIndex) {
+    return html`<sl-select
+      class="select-payers"
+      placeholder="Payers"
+      multiple
+      filled
+      max-options-visible="1"
+      .value=${this.expenses[expenseIndex].payers}
+    >
+      ${this.__usersOptions(expenseIndex)}
+    </sl-select>`;
+  }
+
+  __usersOptions(optionIndex) {
+    const handleInput = e => this.handlers.handlePayerChange(e, optionIndex);
+
     return html`${this.users.map(
       (user, index) => html` <sl-option
         value="user-${index}"
-        @click=${e => this.handlers.handlePayerChange(e, optionIndex)}
-        @keydown=${e => this.handlers.handlePayerChange(e, optionIndex)}
+        @click=${handleInput}
+        @keydown=${handleInput}
         >${user.name}
       </sl-option>`,
     )}`;
   }
 
-  render() {
-    return html`
-      <form @submit="${this.handlers.addExpense}">
-        <sl-input
-          required
-          placeholder="Expense"
-          .value=${this.expense.name}
-          @input=${this.handlers.handleChange}
-        ></sl-input>
-        <sl-button type="submit" variant="success"
-          ><sl-icon slot="suffix" name="plus-lg"></sl-icon
-        ></sl-button>
-      </form>
+  __formAddExpense() {
+    return html` <form @submit="${this.handlers.addExpense}">
+      <sl-input
+        required
+        placeholder="Expense"
+        .value=${this.expense.name}
+        @input=${this.handlers.handleChange}
+      ></sl-input>
+      <sl-button type="submit" variant="success"
+        ><sl-icon slot="suffix" name="plus-lg"></sl-icon
+      ></sl-button>
+    </form>`;
+  }
 
-      <div class="payers-container">
-        ${this.expenses.map(
-          (expense, index) => html` <sl-card class="card-basic" key=${index}>
-            <div class="card-content">
-              <div>
-                <p>${expense.name}</p>
-                <sl-input
-                  pill
-                  class="card-input"
-                  data-index=${index}
-                  @input="${this.handlers.handleInput}"
-                  value=${maskCurrency(String(expense.price))}
-                >
-                  <sl-icon name="currency-dollar" slot="prefix"></sl-icon>
-                </sl-input>
-              </div>
+  __expensesList() {
+    return html`<div class="payers-container">
+      ${this.expenses.map(
+        (expense, index) => html` <sl-card class="card-basic" key=${index}>
+          <div class="card-content">
+            <div>
+              <p>${expense.name}</p>
+              <sl-input
+                pill
+                class="card-input"
+                @input="${e => this.handlers.handleInput(e, index)}"
+                value=${maskCurrency(String(expense.price))}
+              >
+                <sl-icon name="currency-dollar" slot="prefix"></sl-icon>
+              </sl-input>
             </div>
-            <sl-icon-button
-              class="trash-icon"
-              name="trash"
-              label="Trash"
-              data-index=${index}
-              @click=${this.handlers.removeExpense}
-            ></sl-icon-button>
+          </div>
+          <sl-icon-button
+            class="trash-icon"
+            name="trash"
+            label="Trash"
+            @click=${() => this.handlers.removeExpense(index)}
+          ></sl-icon-button>
 
-            <sl-select
-              class="select-payers"
-              placeholder="Payers"
-              multiple
-              filled
-              max-options-visible="1"
-              .value=${this.expenses[index].payers}
-            >
-              ${this.__renderUsersOptions(index)}
-            </sl-select>
-          </sl-card>`,
-        )}
-      </div>
-    `;
+          ${this.__usersSelect(index)}
+        </sl-card>`,
+      )}
+    </div>`;
+  }
+
+  render() {
+    return html`${this.__formAddExpense()} ${this.__expensesList()}`;
   }
 }
 
