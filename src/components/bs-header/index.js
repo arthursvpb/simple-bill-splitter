@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 
 import { expenseStore } from '../../store';
 import { maskCurrency } from '../../utils/currency';

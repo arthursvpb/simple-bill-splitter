@@ -1,72 +1,13 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 
-import { userStore, expenseStore } from '../store';
-import { maskCurrency, unmaskCurrency } from '../utils/currency';
+import { userStore, expenseStore } from '../../store';
+import { maskCurrency, unmaskCurrency } from '../../utils/currency';
 
-export class BSAddExpense extends LitElement {
+import { styles } from './styles';
+
+export class BSExpenses extends LitElement {
   static get styles() {
-    return css`
-      form {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-      }
-
-      .payers-container {
-        margin-top: 20px;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-      }
-
-      .card-basic {
-        position: relative;
-        margin-top: 20px;
-        width: 250px;
-      }
-
-      .card-content {
-        display: flex;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .card-input {
-        width: 180px;
-      }
-
-      .trash-icon {
-        margin: 10px;
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-
-      .hide {
-        visibility: hidden;
-      }
-
-      .display-none {
-        display: none;
-      }
-
-      .select-payers {
-        margin-top: 20px;
-      }
-
-      sl-select::part(tag__remove-button) {
-        display: none;
-      }
-
-      .checkbox-everyone {
-        margin-top: 16px;
-        margin-left: 22px;
-        display: flex;
-        align-items: center;
-      }
-    `;
+    return styles;
   }
 
   static get properties() {
@@ -262,4 +203,4 @@ export class BSAddExpense extends LitElement {
   }
 }
 
-customElements.define('bs-add-expense', BSAddExpense);
+customElements.define('bs-expenses', BSExpenses);
