@@ -5,7 +5,7 @@ import {
   calculateBills,
   getTotal,
   removeUserFromExpense,
-} from '../utils/calculate';
+} from '../../utils/calculate';
 
 export const expenseStore = createStore(
   persist(
