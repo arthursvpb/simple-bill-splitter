@@ -5,17 +5,21 @@ import { maskCurrency, unmaskCurrency } from '../../utils/currency';
 
 import { styles } from './styles';
 
-export class BSExpenses extends LitElement {
-  static get styles() {
-    return styles;
-  }
+const {
+  state: { expenses },
+} = JSON.parse(localStorage.getItem('@bs-expenses'));
 
+export class BSExpenses extends LitElement {
   static get properties() {
     return {
       store: Object,
       expense: Object,
       expenses: Array,
     };
+  }
+
+  static get styles() {
+    return styles;
   }
 
   constructor() {
@@ -30,6 +34,18 @@ export class BSExpenses extends LitElement {
     this.unsubscribe = userStore.subscribe(({ users }) =>
       this.__handleStateChange(users),
     );
+  }
+
+  firstUpdated() {
+    super.firstUpdated();
+    if (expenses.length) this.expenses = [...expenses];
+  }
+
+  updated(changedProps) {
+    if (changedProps.has('expense') || changedProps.has('expenses'))
+      this.__localStorageUpdate();
+
+    super.updated(changedProps);
   }
 
   disconnectedCallback() {
@@ -108,23 +124,6 @@ export class BSExpenses extends LitElement {
 
   __localStorageUpdate() {
     this.store.getState().persistExpense(this.expenses);
-  }
-
-  firstUpdated() {
-    super.firstUpdated();
-
-    const {
-      state: { expenses },
-    } = JSON.parse(localStorage.getItem('@bs-expenses'));
-
-    if (expenses.length) this.expenses = [...expenses];
-  }
-
-  updated(changedProps) {
-    if (changedProps.has('expense') || changedProps.has('expenses'))
-      this.__localStorageUpdate();
-
-    super.updated(changedProps);
   }
 
   __handleStateChange(users) {
