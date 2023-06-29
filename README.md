@@ -1,4 +1,4 @@
-<p align="center"><img width="75" alt="logo" src=".github/favicon.png"/></p>
+<!-- <p align="center"><img width="75" alt="logo" src=".github/favicon.png"/></p> -->
 <h1 align="center">Simple Bill Splitter</h1>
 
 <p align="center">
