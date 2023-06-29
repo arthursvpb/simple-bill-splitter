@@ -1,7 +1,11 @@
 import { persist } from 'zustand/middleware';
 import { createStore } from 'zustand/vanilla';
 
-import { calculateBills, getTotal } from '../utils/calculate';
+import {
+  calculateBills,
+  getTotal,
+  removeUserFromExpense,
+} from '../utils/calculate';
 
 export const expenseStore = createStore(
   persist(
@@ -10,6 +14,7 @@ export const expenseStore = createStore(
       persistExpense: expenses => set(() => ({ expenses })),
       getTotal,
       calculateBills,
+      removeUserFromExpense,
     }),
     { name: '@bs-expenses' },
   ),

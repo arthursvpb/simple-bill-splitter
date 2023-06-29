@@ -39,8 +39,9 @@ export class BSUsers extends LitElement {
       handleChange: e => {
         this.user.name = e.target.value;
       },
-      removeUser: e => {
-        this.users.splice(e.currentTarget.dataset.index, 1);
+      removeUser: (index, user) => {
+        this.users.splice(index, 1);
+        expenseStore.getState().removeUserFromExpense(user, this.expenses);
         this.__updateUserIndexes();
         expenseStore.getState().calculateBills(this.users, this.expenses);
       },
@@ -140,8 +141,7 @@ export class BSUsers extends LitElement {
               class="trash-icon"
               name="trash"
               label="Trash"
-              data-index=${index}
-              @click=${this.handlers.removeUser}
+              @click=${() => this.handlers.removeUser(index, `user-${index}`)}
             ></sl-icon-button>
           </sl-card>`,
         )}
