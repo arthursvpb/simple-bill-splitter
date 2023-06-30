@@ -20,17 +20,8 @@ export class BSHeader extends LitElement {
   constructor() {
     super();
 
-    this.__initState();
-  }
-
-  __initState() {
     this.expenses = [];
     this.total = 0;
-  }
-
-  __handleStateChange(expenses) {
-    this.expenses = [...expenses];
-    this.requestUpdate();
   }
 
   update(changedProps) {
@@ -44,9 +35,10 @@ export class BSHeader extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.unsubscribe = expenseStore.subscribe(({ expenses }) =>
-      this.__handleStateChange(expenses),
-    );
+    this.unsubscribe = expenseStore.subscribe(({ expenses }) => {
+      this.expenses = [...expenses];
+      this.requestUpdate();
+    });
   }
 
   disconnectedCallback() {
