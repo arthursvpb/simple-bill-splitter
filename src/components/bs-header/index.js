@@ -12,8 +12,8 @@ export class BSHeader extends LitElement {
 
   static get properties() {
     return {
-      store: Object,
       expenses: Object,
+      total: Number,
     };
   }
 
@@ -24,22 +24,22 @@ export class BSHeader extends LitElement {
   }
 
   __initState() {
-    this.store = expenseStore;
-
     this.expenses = [];
     this.total = 0;
-  }
-
-  update(changedProps) {
-    if (changedProps.has('expenses'))
-      this.total = this.store.getState().getTotal(this.expenses);
-
-    super.update(changedProps);
   }
 
   __handleStateChange(expenses) {
     this.expenses = [...expenses];
     this.requestUpdate();
+  }
+
+  update(changedProps) {
+    if (changedProps.has('expenses')) {
+      const { getTotal } = expenseStore.getState();
+      this.total = getTotal(this.expenses);
+    }
+
+    super.update(changedProps);
   }
 
   connectedCallback() {

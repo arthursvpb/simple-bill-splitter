@@ -12,7 +12,7 @@ const {
 export class BSExpenses extends LitElement {
   static get properties() {
     return {
-      store: Object,
+      users: Array,
       expense: Object,
       expenses: Array,
     };
@@ -29,11 +29,70 @@ export class BSExpenses extends LitElement {
     this.__initHandlers();
   }
 
+  __initState() {
+    this.users = [];
+
+    this.expense = { name: '', price: 0, payers: [] };
+    this.expenses = [];
+  }
+
+  __initHandlers() {
+    this.handlers = {
+      handleChange: event => {
+        this.expense.name = event.target.value;
+      },
+      handleInput(event) {
+        const {
+          value,
+          dataset: { index },
+        } = event.target;
+
+        const expense = this.expenses[index];
+        expense.price = Number(unmaskCurrency(value));
+        event.target.value = maskCurrency(value);
+
+        this.__updateState();
+      },
+      removeExpense: index => {
+        this.expenses.splice(index, 1);
+        this.__updateState();
+      },
+      addExpense: event => {
+        event.preventDefault();
+        if (!this.expense.name) return;
+
+        this.expense.payers = this.__getDefaultUsersSelected();
+        this.expenses.push(this.expense);
+
+        this.expense = { name: '', price: 0, payers: [] };
+
+        event.target.reset();
+      },
+      handlePayerChange: (event, index) => {
+        if (event.type === 'click' || event.key === 'Enter') {
+          const user = event.target.value;
+          const { payers } = this.expenses[index];
+
+          const userIndex = payers.findIndex(payer => payer === user);
+          const foundIndex = userIndex !== -1;
+
+          foundIndex
+            ? payers.splice(userIndex, 1)
+            : payers.splice(userIndex, 0, user);
+
+          this.__updateState();
+        }
+      },
+    };
+  }
+
   connectedCallback() {
     super.connectedCallback();
-    this.unsubscribe = userStore.subscribe(({ users }) =>
-      this.__handleStateChange(users),
-    );
+
+    this.unsubscribe = userStore.subscribe(({ users }) => {
+      this.users = [...users];
+      this.requestUpdate();
+    });
   }
 
   firstUpdated() {
@@ -53,82 +112,15 @@ export class BSExpenses extends LitElement {
     this.unsubscribe();
   }
 
-  __initState() {
-    this.store = expenseStore;
-
-    this.users = [];
-    this.selectedUsers = [];
-
-    this.expense = {
-      name: '',
-      price: 0,
-      payers: [],
-    };
-
-    this.expenses = [];
-  }
-
-  __initHandlers() {
-    this.handlers = {
-      handleChange: e => {
-        this.expense.name = e.target.value;
-      },
-      handleInput(e, index) {
-        const value = unmaskCurrency(e.target.value);
-        const expense = this.expenses[index];
-        expense.price = Number(value);
-        e.target.value = maskCurrency(value);
-
-        this.store.getState().calculateBills(this.users, this.expenses);
-        this.expenses = [...this.expenses];
-      },
-      removeExpense: index => {
-        this.expenses.splice(index, 1);
-
-        this.store.getState().calculateBills(this.users, this.expenses);
-        this.expenses = [...this.expenses];
-      },
-      addExpense: e => {
-        e.preventDefault();
-        if (!this.expense.name) return;
-
-        this.expense.payers = this.__getDefaultUsersSelected();
-        this.expenses.push(this.expense);
-
-        this.expense = {
-          name: '',
-          price: 0,
-          payers: [],
-        };
-
-        e.target.reset();
-      },
-      handlePayerChange: (e, index) => {
-        if (e.type === 'click' || e.key === 'Enter') {
-          const user = e.target.value;
-          const { payers } = this.expenses[index];
-
-          const userIndex = payers.findIndex(payer => payer === user);
-          const foundIndex = userIndex !== -1;
-
-          foundIndex
-            ? payers.splice(userIndex, 1)
-            : payers.splice(userIndex, 0, user);
-
-          this.store.getState().calculateBills(this.users, this.expenses);
-          this.expenses = [...this.expenses];
-        }
-      },
-    };
-  }
-
   __localStorageUpdate() {
-    this.store.getState().persistExpense(this.expenses);
+    const { persistExpense } = expenseStore.getState();
+    persistExpense(this.expenses);
   }
 
-  __handleStateChange(users) {
-    this.users = [...users];
-    this.requestUpdate();
+  __updateState() {
+    const { calculateBills } = expenseStore.getState();
+    calculateBills(this.users, this.expenses);
+    this.expenses = [...this.expenses];
   }
 
   __getDefaultUsersSelected() {
@@ -149,13 +141,11 @@ export class BSExpenses extends LitElement {
   }
 
   __usersOptions(optionIndex) {
-    const handleInput = e => this.handlers.handlePayerChange(e, optionIndex);
-
     return html`${this.users.map(
       (user, index) => html` <sl-option
         value="user-${index}"
-        @click=${handleInput}
-        @keydown=${handleInput}
+        @click=${event => this.handlers.handlePayerChange(event, optionIndex)}
+        @keydown=${event => this.handlers.handlePayerChange(event, optionIndex)}
         >${user.name}
       </sl-option>`,
     )}`;
@@ -178,14 +168,15 @@ export class BSExpenses extends LitElement {
   __expensesList() {
     return html`<div class="payers-container">
       ${this.expenses.map(
-        (expense, index) => html` <sl-card class="card-basic" key=${index}>
+        (expense, index) => html` <sl-card class="card-basic">
           <div class="card-content">
             <div>
               <p>${expense.name}</p>
               <sl-input
                 pill
                 class="card-input"
-                @input="${e => this.handlers.handleInput(e, index)}"
+                data-index=${index}
+                @input="${this.handlers.handleInput}"
                 value=${maskCurrency(String(expense.price))}
               >
                 <sl-icon name="currency-dollar" slot="prefix"></sl-icon>
