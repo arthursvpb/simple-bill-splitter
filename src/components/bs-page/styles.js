@@ -10,5 +10,10 @@ export const styles = css`
     flex-direction: row;
     margin: auto;
     gap: 2.5rem;
+
+    @media (max-width: 768px) {
+      align-items: center;
+      flex-direction: column;
+    }
   }
 `;
