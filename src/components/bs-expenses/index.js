@@ -12,9 +12,9 @@ const {
 export class BSExpenses extends LitElement {
   static get properties() {
     return {
-      users: Array,
       expense: Object,
       expenses: Array,
+      users: Array,
     };
   }
 
@@ -30,10 +30,9 @@ export class BSExpenses extends LitElement {
   }
 
   __initState() {
-    this.users = [];
-
     this.expense = { name: '', price: 0, payers: [] };
     this.expenses = [];
+    this.users = [];
   }
 
   __initHandlers() {
