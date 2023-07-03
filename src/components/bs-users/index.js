@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit';
 
 import { expenseStore, userStore } from '../../store';
+import { maskCurrency } from '../../utils/currency';
 
 import { styles } from './styles';
 
@@ -136,7 +137,7 @@ export class BSUsers extends LitElement {
           <p>
             Needs to pay:
             <span class=${user.bill && 'needs-to-pay'}
-              >$ ${Number(user.bill).toFixed(2)}</span
+              >$ ${maskCurrency(String(user.bill))}</span
             >
           </p>
           <sl-icon-button
