@@ -51,7 +51,7 @@ export class BSHeader extends LitElement {
       <sl-icon name="cash-coin"></sl-icon>
       <p>
         Total:
-        <span class="total">$ ${maskCurrency(String(this.total))}</span>
+        <span class="total">$ ${maskCurrency(this.total)}</span>
       </p>
     </header>`;
   }

@@ -42,13 +42,17 @@ export class BSExpenses extends LitElement {
       },
       handleInput(event) {
         const {
-          value,
-          dataset: { index },
-        } = event.target;
+          target: {
+            value,
+            dataset: { index },
+          },
+        } = event;
 
         const expense = this.expenses[index];
-        expense.price = Number(unmaskCurrency(value));
-        event.target.value = maskCurrency(value);
+
+        const unmaskedPrice = unmaskCurrency(value);
+        expense.price = unmaskedPrice || 0;
+        event.target.value = maskCurrency(expense.price);
 
         this.__updateState();
       },
@@ -175,8 +179,9 @@ export class BSExpenses extends LitElement {
                 pill
                 class="card-input"
                 data-index=${index}
-                @input="${this.handlers.handleInput}"
-                value=${maskCurrency(String(expense.price))}
+                inputmode="numeric"
+                @sl-input="${this.handlers.handleInput}"
+                value=${maskCurrency(expense.price)}
               >
                 <sl-icon name="currency-dollar" slot="prefix"></sl-icon>
               </sl-input>

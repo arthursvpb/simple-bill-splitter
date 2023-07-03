@@ -137,7 +137,7 @@ export class BSUsers extends LitElement {
           <p>
             Needs to pay:
             <span class=${user.bill && 'needs-to-pay'}
-              >$ ${maskCurrency(String(user.bill))}</span
+              >$ ${maskCurrency(user.bill)}</span
             >
           </p>
           <sl-icon-button
