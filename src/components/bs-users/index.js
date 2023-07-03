@@ -41,10 +41,13 @@ export class BSUsers extends LitElement {
         this.user.name = e.target.value;
       },
       removeUser: (index, user) => {
-        const { removeUserFromExpense } = expenseStore.getState();
+        const { removeUserFromExpense, persistExpense } =
+          expenseStore.getState();
         this.users.splice(index, 1);
 
         removeUserFromExpense(user, this.expenses);
+        persistExpense(this.expenses);
+
         this.__updateState();
       },
       addUser: e => {
