@@ -8,7 +8,9 @@ export const calculateBills = (users, expenses) => {
 
   expenses.forEach(expense => {
     const numPayers = expense.payers.length;
-    const splitAmount = (expense.price / 100).toFixed(2) / numPayers;
+    const splitAmount = Math.floor(
+      (expense.price / 100).toFixed(2) / numPayers,
+    );
 
     expense.payers.forEach(payerId => {
       const payer = users.find(user => user.id === payerId);
