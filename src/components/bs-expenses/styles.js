@@ -39,14 +39,6 @@ export const styles = css`
     right: 0;
   }
 
-  .hide {
-    visibility: hidden;
-  }
-
-  .display-none {
-    display: none;
-  }
-
   .select-payers {
     margin-top: 20px;
   }
