@@ -5,10 +5,6 @@
   "repository": "git@github.com:arthursvpb/simple-bill-splitter.git",
   "author": "arthursvpb <contato@arthurvasconcellos.com>",
   "license": "MIT",
-  "engines": {
-    "node": ">=18.16.0",
-    "yarn": ">=1.22.19"
-  },
   "scripts": {
     "dev": "webpack serve --hot --mode development",
     "build": "webpack --mode production"
